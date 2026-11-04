@@ -1,6 +1,6 @@
 # Convertisseur
 
-Glisse des fichiers dans la fenêtre, puis choisis une action :
+Dépose tes fichiers directement sur l'action voulue (ou clique dessus pour parcourir) :
 
 | Fichiers déposés | Actions proposées |
 |---|---|

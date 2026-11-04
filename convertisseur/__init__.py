@@ -14,7 +14,7 @@ Organisation du dossier :
 NOM_APPLICATION = "Convertisseur"
 
 # Numéro de version : à augmenter avant chaque publication (voir publier.bat)
-VERSION = "1.0.2"
+VERSION = "1.1.0"
 
 # Dépôt GitHub où sont publiées les nouvelles versions (« propriétaire/nom »)
 DEPOT_GITHUB = "vdevdevde/convertisseur"

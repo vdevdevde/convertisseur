@@ -1,37 +1,54 @@
-"""Le style de l'application : uniquement du noir, du blanc et des gris.
+"""Le style de l'application, façon « terminal » : uniquement du noir, du blanc
+et des gris, une police à chasse fixe, des coins presque droits.
 
-Deux jeux de couleurs : CLAIR (fond blanc, texte noir) et SOMBRE (l'inverse).
+Deux jeux de couleurs : SOMBRE (fond noir, texte blanc) et CLAIR (l'inverse).
 L'application suit automatiquement le réglage clair / sombre de Windows.
 """
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QGuiApplication, QPalette
+from PySide6.QtGui import QColor, QFont, QFontDatabase, QGuiApplication, QPalette
+
+# Polices à chasse fixe, par ordre de préférence (Consolas existe sur tous les Windows)
+POLICES = ["Cascadia Mono", "JetBrains Mono", "Consolas", "Courier New"]
+
+SOMBRE = {
+    "fond": "#0A0A0A",
+    "carte": "#161616",       # fond d'une carte survolée
+    "texte": "#EDEDED",
+    "doux": "#7C7C7C",        # texte secondaire
+    "trait": "#3A3A3A",       # bordures fines
+    "survol": "#1A1A1A",
+    "appui": "#262626",
+    "piste": "#2A2A2A",       # fond des barres et curseurs
+    "accent": "#EDEDED",      # bouton principal
+    "accent_survol": "#C8C8C8",
+    "sur_accent": "#0A0A0A",  # texte sur le bouton principal
+}
 
 CLAIR = {
     "fond": "#FFFFFF",
+    "carte": "#F3F3F3",
     "texte": "#111111",
-    "doux": "#6E6E6E",        # texte secondaire
-    "trait": "#CFCFCF",       # bordures fines
-    "survol": "#F4F4F4",      # fond au survol
-    "appui": "#E8E8E8",       # fond quand on clique
-    "piste": "#E6E6E6",       # fond des barres et curseurs
-    "accent": "#111111",      # bouton principal
+    "doux": "#767676",
+    "trait": "#C4C4C4",
+    "survol": "#F3F3F3",
+    "appui": "#E6E6E6",
+    "piste": "#E4E4E4",
+    "accent": "#111111",
     "accent_survol": "#3A3A3A",
-    "sur_accent": "#FFFFFF",  # texte sur le bouton principal
+    "sur_accent": "#FFFFFF",
 }
 
-SOMBRE = {
-    "fond": "#121212",
-    "texte": "#F2F2F2",
-    "doux": "#9A9A9A",
-    "trait": "#3A3A3A",
-    "survol": "#1E1E1E",
-    "appui": "#2A2A2A",
-    "piste": "#2E2E2E",
-    "accent": "#F2F2F2",
-    "accent_survol": "#CFCFCF",
-    "sur_accent": "#121212",
-}
+
+def police_monospace(taille: float = 10) -> QFont:
+    """La première police à chasse fixe disponible sur ce PC."""
+    disponibles = set(QFontDatabase.families())
+    for nom in POLICES:
+        if nom in disponibles:
+            return QFont(nom, taille)
+    police = QFontDatabase.systemFont(QFontDatabase.SystemFont.FixedFont)
+    police.setPointSizeF(taille)
+    return police
 
 
 def mode_sombre_actif() -> bool:
@@ -48,22 +65,23 @@ def feuille_de_style(c: dict) -> str:
     }}
     QLabel {{ background: transparent; }}
 
-    QLabel#titre {{ font-size: 20pt; font-weight: 300; }}
-    QLabel#titreZone {{ font-size: 17pt; font-weight: 300; }}
-    QLabel#resume {{ font-size: 15pt; }}
-    QLabel#actionTitre {{ font-size: 11.5pt; font-weight: 600; }}
+    QLabel#logo {{ font-weight: 700; font-size: 10.5pt; }}
+    QLabel#titre {{ font-size: 17pt; font-weight: 700; }}
+    QLabel#titreCarte {{ font-size: 12pt; font-weight: 700; }}
+    QLabel#resume {{ font-size: 14pt; }}
     QLabel#discret {{ color: {c['doux']}; }}
-    QLabel#etiquette {{ font-weight: 600; }}
+    QLabel#pied {{ color: {c['doux']}; font-size: 9pt; }}
+    QLabel#etiquette {{ color: {c['doux']}; }}
 
-    /* Boutons : rectangles simples, coins légèrement arrondis */
+    /* Boutons : rectangles simples, coins presque droits */
     QPushButton {{
-        background: {c['fond']};
+        background: transparent;
         color: {c['texte']};
         border: 1px solid {c['trait']};
-        border-radius: 6px;
-        padding: 9px 20px;
+        border-radius: 2px;
+        padding: 8px 18px;
     }}
-    QPushButton:hover {{ background: {c['survol']}; border-color: {c['doux']}; }}
+    QPushButton:hover {{ background: {c['survol']}; border-color: {c['texte']}; }}
     QPushButton:pressed {{ background: {c['appui']}; }}
     QPushButton:disabled {{ color: {c['doux']}; border-color: {c['piste']}; }}
 
@@ -71,25 +89,23 @@ def feuille_de_style(c: dict) -> str:
         background: {c['accent']};
         color: {c['sur_accent']};
         border: 1px solid {c['accent']};
-        font-weight: 600;
+        font-weight: 700;
     }}
     QPushButton#primaire:hover {{ background: {c['accent_survol']}; border-color: {c['accent_survol']}; }}
     QPushButton#primaire:disabled {{ background: {c['piste']}; border-color: {c['piste']}; color: {c['doux']}; }}
 
+    /* Liens façon [parcourir] */
     QPushButton#lien {{
         background: transparent;
         border: none;
-        color: {c['doux']};
+        color: {c['texte']};
         text-decoration: underline;
-        padding: 4px 6px;
+        padding: 2px 0;
     }}
-    QPushButton#lien:hover {{ color: {c['texte']}; }}
+    QPushButton#lien:hover {{ color: {c['doux']}; }}
 
-    QPushButton#action {{ text-align: left; padding: 0; }}
-    QPushButton#action:hover {{ border-color: {c['texte']}; }}
-
-    /* Boutons à choix unique (Originale / 1920 px / 1280 px) */
-    QPushButton#choix {{ padding: 7px 16px; }}
+    /* Boutons à choix unique (originale / 1920 px / 1280 px) */
+    QPushButton#choix {{ padding: 6px 14px; }}
     QPushButton#choix:checked {{
         background: {c['accent']};
         color: {c['sur_accent']};
@@ -100,28 +116,27 @@ def feuille_de_style(c: dict) -> str:
     QProgressBar {{
         background: {c['piste']};
         border: none;
-        border-radius: 1px;
-        min-height: 3px;
-        max-height: 3px;
+        min-height: 2px;
+        max-height: 2px;
     }}
-    QProgressBar::chunk {{ background: {c['texte']}; border-radius: 1px; }}
+    QProgressBar::chunk {{ background: {c['texte']}; }}
 
-    /* Curseur « Qualité » */
-    QSlider::groove:horizontal {{ height: 2px; background: {c['piste']}; }}
+    /* Curseur « qualité » */
+    QSlider::groove:horizontal {{ height: 1px; background: {c['trait']}; }}
     QSlider::sub-page:horizontal {{ background: {c['texte']}; }}
     QSlider::handle:horizontal {{
         background: {c['texte']};
-        width: 14px;
+        width: 10px;
         height: 14px;
-        margin: -6px 0;
-        border-radius: 7px;
+        margin: -7px 0;
+        border-radius: 1px;
     }}
 
     /* Champs de saisie */
     QSpinBox, QDoubleSpinBox, QComboBox {{
         background: {c['fond']};
         border: 1px solid {c['trait']};
-        border-radius: 6px;
+        border-radius: 2px;
         padding: 6px 8px;
         min-width: 90px;
     }}
@@ -139,24 +154,27 @@ def feuille_de_style(c: dict) -> str:
     /* Liste des miniatures */
     QListWidget {{
         background: {c['fond']};
-        border: 1px solid {c['trait']};
-        border-radius: 6px;
+        border: 1px dashed {c['trait']};
+        border-radius: 3px;
         padding: 10px;
         outline: none;
     }}
-    QListWidget::item {{ border: 1px solid transparent; border-radius: 4px; padding: 4px; }}
+    QListWidget::item {{ border: 1px solid transparent; padding: 4px; }}
     QListWidget::item:hover {{ background: {c['survol']}; }}
     QListWidget::item:selected {{ background: {c['survol']}; border-color: {c['texte']}; }}
 
-    /* Barres de défilement discrètes */
-    QScrollBar:vertical {{ background: transparent; width: 8px; margin: 2px; }}
-    QScrollBar::handle:vertical {{ background: {c['trait']}; border-radius: 3px; min-height: 30px; }}
-    QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; width: 0; }}
-    QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
+    /* Ligne de séparation */
+    QFrame#ligne {{ background: {c['trait']}; border: none; max-height: 1px; min-height: 1px; }}
 
     /* Bandeau « nouvelle version » en bas de la fenêtre */
     QFrame#bandeau {{ border-top: 1px solid {c['trait']}; }}
-    QFrame#bandeau QPushButton#primaire {{ padding: 6px 14px; }}
+    QFrame#bandeau QPushButton#primaire {{ padding: 5px 12px; }}
+
+    /* Barres de défilement discrètes */
+    QScrollBar:vertical {{ background: transparent; width: 8px; margin: 2px; }}
+    QScrollBar::handle:vertical {{ background: {c['trait']}; min-height: 30px; }}
+    QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; width: 0; }}
+    QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
 
     QToolTip {{
         background: {c['texte']};

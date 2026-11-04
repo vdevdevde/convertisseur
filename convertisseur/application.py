@@ -7,12 +7,12 @@ import traceback
 from pathlib import Path
 
 from PySide6.QtCore import QLocale, QTimer
-from PySide6.QtGui import QFont, QIcon
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from . import NOM_APPLICATION
 from .fichiers import chemin_ressource
-from .style import appliquer_theme
+from .style import appliquer_theme, police_monospace
 
 
 def _preparer_journal():
@@ -57,7 +57,7 @@ def demarrer() -> int:
     application = QApplication(sys.argv)
     application.setApplicationName(NOM_APPLICATION)
     application.setStyle("Fusion")  # style sobre, que l'on peut colorer en noir et blanc
-    application.setFont(QFont("Segoe UI", 10))
+    application.setFont(police_monospace(10))  # police façon terminal
     # Nombres à la française (virgule décimale)
     QLocale.setDefault(QLocale(QLocale.Language.French, QLocale.Country.France))
     icone = chemin_ressource("icone.ico")
