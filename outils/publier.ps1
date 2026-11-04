@@ -10,6 +10,8 @@
 #    3. crée la « Release » sur GitHub avec ce .zip.
 #  Les applications déjà installées proposeront alors la mise à jour.
 # ================================================================
+# Option : -Notes "texte" pour ne pas avoir de question
+param([string]$Notes = '')
 $ErrorActionPreference = 'Stop'
 Set-Location (Split-Path $PSScriptRoot -Parent)
 $gh = 'C:\Program Files\GitHub CLI\gh.exe'
@@ -38,7 +40,8 @@ if ($modifs) { Arret "Des modifications ne sont pas enregistrées (commit). Fais
 git rev-parse -q --verify "refs/tags/$etiquette" *> $null
 if ($LASTEXITCODE -eq 0) { Arret "La version $version existe déjà. Augmente VERSION dans convertisseur\__init__.py." }
 
-$notes = Read-Host 'Qu''est-ce qui change dans cette version ? (une phrase)'
+$notes = $Notes
+if (-not $notes) { $notes = Read-Host 'Qu''est-ce qui change dans cette version ? (une phrase)' }
 if (-not $notes) { $notes = "Version $version" }
 
 # --- 1. Fabrication ---
