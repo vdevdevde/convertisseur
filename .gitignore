@@ -1,0 +1,17 @@
+# Ce dépôt ne contient QUE l'application Convertisseur.
+# Le dossier « projet » contient d'autres projets : tout est ignoré par défaut,
+# sauf les fichiers listés ci-dessous (le « ! » veut dire « à inclure »).
+/*
+!/.gitignore
+!/convertisseur/
+!/outils/
+!/ressources/
+!/lancer.py
+!/construire.bat
+!/publier.bat
+!/requirements.txt
+!/README.md
+
+# Fichiers temporaires de Python
+__pycache__/
+*.pyc
