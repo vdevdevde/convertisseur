@@ -46,7 +46,7 @@ if (-not $notes) { $notes = "Version $version" }
 
 # --- 1. Fabrication ---
 Write-Host '[1/3] Fabrication de l''application...'
-cmd /c "construire.bat < nul"
+cmd /c ".\construire.bat < nul"
 if ($LASTEXITCODE -ne 0) { Arret 'La fabrication a échoué.' }
 
 # --- 2. Archive .zip (contient le dossier Convertisseur) ---
@@ -65,3 +65,4 @@ if ($LASTEXITCODE -ne 0) { Arret 'La création de la version sur GitHub a échou
 
 Write-Host ''
 Write-Host "Terminé ! La version $version est en ligne." -ForegroundColor Green
+
