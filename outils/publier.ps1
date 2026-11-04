@@ -53,7 +53,9 @@ if ($LASTEXITCODE -ne 0) { Arret 'La fabrication a échoué.' }
 Write-Host '[2/3] Création du fichier .zip...'
 $zip = "dist\Convertisseur-$version.zip"
 if (Test-Path $zip) { Remove-Item $zip }
-Compress-Archive -Path 'dist\Convertisseur' -DestinationPath $zip -CompressionLevel Optimal
+# (Python crée un .zip standard ; Compress-Archive de Windows PowerShell 5 met des « \ » dans les chemins)
+.venv\Scripts\python.exe -c "import shutil; shutil.make_archive('dist/Convertisseur-$version', 'zip', 'dist', 'Convertisseur')"
+if ($LASTEXITCODE -ne 0) { Arret 'La création du .zip a échoué.' }
 
 # --- 3. Envoi sur GitHub ---
 Write-Host '[3/3] Envoi sur GitHub...'

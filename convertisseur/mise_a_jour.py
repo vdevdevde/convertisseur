@@ -66,7 +66,7 @@ def verifier(progression=None, arret=None) -> dict | None:
         with urllib.request.urlopen(requete, timeout=10) as reponse:
             donnees = json.load(reponse)
     except Exception as erreur:
-        journal.info("Vérification des mises à jour impossible : %s", erreur)
+        journal.warning("Vérification des mises à jour impossible : %s", erreur)
         return None
 
     etiquette = donnees.get("tag_name", "")
